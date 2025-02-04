@@ -1,7 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-{% include 'partials/header.html' %}
 
 <head>
     <meta charset="UTF-8">
@@ -26,7 +25,7 @@
         html, body {
             height: 100%;
             margin: 0;
-            overflow: hidden; /* Prevents unwanted scroll */
+            overflow: hidden;
         }
 
         body {
@@ -34,7 +33,7 @@
             position: relative;
         }
 
-        /* Background effect: Moving Chevrons */
+        /* Background effect */
         body::before {
             content: "";
             position: absolute;
@@ -62,10 +61,15 @@
             }
         }
 
-        /* Container Styling */
+        /* Center Content */
         .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             text-align: center;
-            margin-top: 15vh;
+            padding: 20px;
         }
 
         h1 {
@@ -97,8 +101,37 @@
         input {
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            text-align: center;
+            text-align: left;
             outline: none;
+            padding: 12px;
+            min-height: 50px;
+            word-wrap: break-word;
+        }
+
+        /* Custom Upload Button */
+        .custom-file-upload {
+            display: inline-block;
+            background-color: #C676FF;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #a04ed6;
+        }
+
+        /* Image Preview */
+        #imagePreview {
+            max-width: 100%;
+            max-height: 200px;
+            display: none;
+            margin-top: 10px;
+            border-radius: 10px;
         }
 
         button {
@@ -141,24 +174,63 @@
         <h1>Mint Your Memory</h1>
         <p>Immortalize your love with AI-driven memories on your DNS domain.</p>
 
-        <form id="mintForm">
-            <input type="text" id="memory" placeholder="Enter your memory" required>
+        <form id="mintForm" enctype="multipart/form-data">
+            <!-- Custom File Upload -->
+            <label for="memory" class="custom-file-upload">
+                Upload Image
+            </label>
+            <input type="file" id="memory" accept="image/*" required hidden>
+            <span id="fileName" style="display: block; margin-top: 10px; font-size: 14px;"></span>
+
+            <!-- Image Preview -->
+            <img id="imagePreview">
+
+            <!-- DNS Domain Input -->
             <input type="text" id="dnsDomain" placeholder="Enter your DNS domain" required>
+
+            <!-- Submit Button -->
             <button type="submit">Mint Memory</button>
         </form>
-
+        
         <p id="statusMessage"></p>
 
         <a href="{% url 'landing_page' %}">← Back to Home</a>
     </div>
 
     <script>
-        document.getElementById("mintForm").addEventListener("submit", function(event) {
-            event.preventDefault();  // Prevent page reload
+        document.getElementById("memory").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            const fileNameDisplay = document.getElementById("fileName");
+            const imagePreview = document.getElementById("imagePreview");
 
-            const memory = document.getElementById("memory").value;
+            if (file) {
+                // Show selected file name
+                fileNameDisplay.textContent = `Selected: ${file.name}`;
+                
+                // Show image preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = "block"; 
+                };
+                reader.readAsDataURL(file); 
+            } else {
+                fileNameDisplay.textContent = "";
+                imagePreview.style.display = "none"; 
+            }
+        });
+
+        document.getElementById("mintForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const memory = document.getElementById("memory").files[0];  
             const dnsDomain = document.getElementById("dnsDomain").value;
             const statusMessage = document.getElementById("statusMessage");
+
+            if (!memory) {
+                statusMessage.textContent = "Please upload an image.";
+                return;
+            }
 
             statusMessage.textContent = "Minting in progress...";
 

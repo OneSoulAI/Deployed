@@ -6,3 +6,6 @@ def landing_page(request):
 
 def login_page(request):
     return render(request, 'main/login.html')
+
+def mint_memory(request):
+    return render(request, 'main/mint-memory.html')

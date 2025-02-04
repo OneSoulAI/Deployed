@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.landing_page, name='landing_page'),
-    path('login', views.login_page, name='login')
+    path('mint-memory/', views.mint_memory, name='mint_memory')
 ]

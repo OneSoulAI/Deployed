@@ -96,14 +96,22 @@
                 <h1>OneSoul.AI</h1>
                 <div style="display: flex; gap: 10px; margin-left: auto; margin-right: 50px;">
                     <!-- Demo Button -->
-                    <a href="{% url 'waitlist' %}" style="text-decoration: none;">
+                    <a href="{% url 'demo' %}" style="text-decoration: none;">
                         <div id="demoButton" 
                             style="height: fit-content;min-width: 100px;padding: 10px;
                                 border-radius: 15px;color:white;background-color: #C676FF;
                                 font-size: 12px; cursor: pointer;">
                             + Demo
                         </div>
+                    </a>
 
+                    <a href="{% url 'waitlist' %}" style="text-decoration: none;">
+                        <div id="waitlistButton" 
+                            style="height: fit-content; min-width: 100px; padding: 10px;
+                                border-radius: 15px; color: white; background-color: #C676FF;
+                                font-size: 12px; cursor: pointer;">
+                            + Waitlist
+                        </div>
                     </a>
                 </div>
             

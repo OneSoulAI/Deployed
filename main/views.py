@@ -12,3 +12,6 @@ def mint_memory(request):
 
 def waitlist(request):
     return render(request, 'main/waitlist.html')
+
+def demo(request):
+    return render(request, 'main/demo.html')

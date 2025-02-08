@@ -12,9 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Import Styles -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
 
     <style>
         * {
@@ -144,23 +142,51 @@
     </div>
 
     <script>
+
+        messages = [{"role": "system", "message": "Hello, how can I assist you today?"}]
+
         function sendMessage() {
+            
             const chatbox = document.getElementById("chatbox");
             const userInput = document.getElementById("userInput");
-            
+    
             if (userInput.value.trim() === "") return;
-            
+            messages.push({"role": "user", "message": document.getElementById("userInput").value})
+    
             const userMessage = `<p><strong>You:</strong> ${userInput.value}</p>`;
             chatbox.innerHTML += userMessage;
-            
-            setTimeout(() => {
-                const botReply = `<p><strong>Bot:</strong> I'm still learning! But I'm here to chat.</p>`;
-                chatbox.innerHTML += botReply;
-                chatbox.scrollTop = chatbox.scrollHeight;
-            }, 1000);
-            
+    
+            // Send message to Django backend
+            fetch("{% url 'chatbot_reply' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ "messages": messages })
+            })
+            .then(response => response.json())
+            .then(data => {
+                setTimeout(() => {
+                    if (data.reply) {
+                        messages.push({"role": "system", "message": data.reply});
+                        const botReply = `<p><strong>Cupid:</strong> ${data.reply}</p>`;
+                        chatbox.innerHTML += botReply;
+                    } else {
+                        messages.push({"role": "system", "message": "No response from AI. Please try again."});
+                        const errorMsg = `<p><strong>Error:</strong> No response from AI. Please try again.</p>`;
+                        chatbox.innerHTML += errorMsg;
+                    }
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                }, 1000);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                chatbox.innerHTML += `<p><strong>Error:</strong> Failed to connect.</p>`;
+            });
+    
             userInput.value = "";
         }
     </script>
+    
 </body>
 </html>

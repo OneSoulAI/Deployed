@@ -9,3 +9,6 @@ def login_page(request):
 
 def mint_memory(request):
     return render(request, 'main/mint-memory.html')
+
+def waitlist(request):
+    return render(request, 'main/waitlist.html')

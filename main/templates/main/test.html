@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onairos Integration</title>
+</head>
+<body>
+
+    <h1>Onairos Integration Example</h1>
+
+    <!-- This is where Onairos will render -->
+    <div id="onairos-container"></div>
+
+    <button id="trigger-onairos">Start Onairos</button>
+
+    <!-- Polyfill for process -->
+    <script>
+        window.process = { env: { NODE_ENV: "production" } };
+    </script>
+
+    <!-- Load Onairos -->
+    <script src="https://cdn.jsdelivr.net/npm/onairos@latest/dist/onairos.umd.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+
+    <script>
+        // Wait for the script to load
+        document.addEventListener("DOMContentLoaded", function () {
+            if (window.Onairos && window.React && window.ReactDOM) {
+                console.log("Onairos and React loaded successfully.");
+
+                // Example props configuration
+                const onairosProps = {
+                    requestData: { userId: "12345" },
+                    webpageName: "Test Page",
+                    autoFetch: true,
+                    proofMode: false,
+                    textLayout: "below",
+                    textColor: "black",
+                    login: true,
+                    loginReturn: function (data, error) {
+                        if (error) {
+                            console.error("Login failed:", error);
+                        } else {
+                            console.log("User logged in:", data);
+                        }
+                    },
+                    onComplete: function (data, error) {
+                        if (error) {
+                            console.error("Error fetching data:", error);
+                        } else {
+                            console.log("Onairos Data:", data);
+                        }
+                    }
+                };
+
+                // Function to render Onairos
+                function renderOnairos() {
+                    const container = document.getElementById("onairos-container");
+
+                    if (container) {
+                        ReactDOM.render(
+                            React.createElement(Onairos.Onairos, onairosProps),
+                            container
+                        );
+                    }
+                }
+
+                // Event Listener for the button
+                document.getElementById("trigger-onairos").addEventListener("click", renderOnairos);
+            } else {
+                console.error("Onairos or React failed to load.");
+            }
+        });
+    </script>
+
+</body>
+</html>

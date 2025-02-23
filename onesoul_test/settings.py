@@ -13,7 +13,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
-ALLOWED_HOSTS = ["onesoul.herokuapp.com", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [
+    'fathomless-escarpment-92845-fc4ba9ea91ec.herokuapp.com',
+    '127.0.0.1',  # Allows local development
+    'localhost',   # Allows local testing
+]
+
 
 
 

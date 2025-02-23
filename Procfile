@@ -1,0 +1,1 @@
+web: gunicorn onesoul_test.wsgi --log-file -

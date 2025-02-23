@@ -8,6 +8,8 @@ import requests
 from openai import OpenAI
 
 from .models import Waitlist
+from django.http import JsonResponse
+from .models import Waitlist
 
 load_dotenv()
 
@@ -54,13 +56,30 @@ def chatbot_reply(request):
 def register(request):
     if request.method == "POST":
         try:
+            # Debugging: Print received data
+            print("Received data:", request.POST)
+
+            # Extract form data
             fullname = request.POST.get("fullname")
             email = request.POST.get("email")
             date_of_birth = request.POST.get("date_of_birth")
             gender = request.POST.get("gender")
-            waiter = Waitlist(fullname=fullname, email=email, date_of_birth=date_of_birth, gender=gender)
+
+            # Ensure all required fields are present
+            if not all([fullname, email, date_of_birth, gender]):
+                return JsonResponse({"message": "Missing required fields"}, status=400)
+
+            # Save to database
+            waiter = Waitlist(
+                fullname=fullname,
+                email=email,
+                date_of_birth=date_of_birth,
+                gender=gender
+            )
             waiter.save()
+
             return JsonResponse({"message": "You have been successfully added to the waitlist!"})
+        
         except Exception as e:
-            print(e) # debug
-            return JsonResponse({"message": "An error occurred while trying to add you to the waitlist."}, status=500)
+            print("Error:", e)  # Debugging
+            return JsonResponse({"message": "An error occurred while adding to the waitlist."}, status=500)

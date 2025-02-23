@@ -4,7 +4,7 @@ from django.db import models
 
 class Waitlist(models.Model):
     fullname = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=10)

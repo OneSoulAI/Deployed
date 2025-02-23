@@ -13,8 +13,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Import Styles -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <style>
         * {
@@ -192,25 +190,36 @@
     </div>
 
     <script>
+        console.log("JavaScript Loaded ✅");  // Check if JavaScript is running
+    
         document.getElementById("registerForm").addEventListener("submit", function(event) {
             event.preventDefault();
-            
+            console.log("Form submitted 🚀");  // Check if event listener is triggered
+    
             const name = document.getElementById("name").value;
             const email = document.getElementById("email").value;
             const gender = document.getElementById("gender").value;
             const dob = document.getElementById("dob").value;
-            const statusMessage = document.getElementById("statusMessage");
-            
-            if (!name || !email || !gender || !dob) {
-                statusMessage.textContent = "All fields are required.";
-                return;
-            }
-
-            statusMessage.textContent = "Processing your registration...";
-
-            setTimeout(() => {
-                statusMessage.textContent = `Welcome, ${name}! Your profile has been created.`;
-            }, 2000);
+            console.log("Collected Data:", name, email, gender, dob);  // Debug form values
+    
+            const formData = new FormData(this);
+    
+            fetch("{% url 'register' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server Response:", data);  // Debugging response
+                document.getElementById("statusMessage").textContent = data.message;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("statusMessage").textContent = "Failed to connect to server.";
+            });
         });
     </script>
 </body>

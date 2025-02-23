@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 
 ALLOWED_HOSTS = [
+    "1soul.ai",
     'fathomless-escarpment-92845-fc4ba9ea91ec.herokuapp.com',
     '127.0.0.1',  # Allows local development
     'localhost',   # Allows local testing

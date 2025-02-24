@@ -10,6 +10,7 @@ from openai import OpenAI
 from .models import Waitlist
 from django.http import JsonResponse
 from .models import Waitlist
+from datetime import datetime
 
 load_dotenv()
 
@@ -53,33 +54,54 @@ def chatbot_reply(request):
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+@csrf_exempt  # Allow API calls without CSRF token (remove in production)
 def register(request):
     if request.method == "POST":
         try:
-            # Debugging: Print received data
-            print("Received data:", request.POST)
-
             # Extract form data
             fullname = request.POST.get("fullname")
             email = request.POST.get("email")
+            location = request.POST.get("location")
             date_of_birth = request.POST.get("date_of_birth")
             gender = request.POST.get("gender")
+            preference = request.POST.get("preference")
+            social_handle = request.POST.get("social_handle")
+            mbti = request.POST.get("mbti")
+            partner_preferences = request.POST.get("partner_preferences")
+
+            # Convert date_of_birth from YYYY-MM-DD to proper date format
+            if date_of_birth:
+                try:
+                    date_of_birth = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
+                except ValueError:
+                    return JsonResponse({"message": "Invalid date format. Use YYYY-MM-DD", "status": "error"})
 
             # Ensure all required fields are present
-            if not all([fullname, email, date_of_birth, gender]):
-                return JsonResponse({"message": "Missing required fields"}, status=400)
+            if not all([fullname, email, location, date_of_birth, gender, preference, social_handle, mbti, partner_preferences]):
+                return JsonResponse({"message": "Missing required fields", "status": "error"})
+
+            # ✅ Check if email already exists
+            if Waitlist.objects.filter(email=email).exists():
+                return JsonResponse({"message": "This email is already registered!", "status": "error"})
 
             # Save to database
             waiter = Waitlist(
                 fullname=fullname,
                 email=email,
+                location=location,
                 date_of_birth=date_of_birth,
-                gender=gender
+                gender=gender,
+                preference=preference,
+                social_handle=social_handle,
+                mbti=mbti,
+                partner_preferences=partner_preferences
             )
             waiter.save()
 
-            return JsonResponse({"message": "You have been successfully added to the waitlist!"})
+            return JsonResponse({"message": "You have been successfully added to the waitlist!", "status": "success"})
         
         except Exception as e:
-            print("Error:", e)  # Debugging
-            return JsonResponse({"message": "An error occurred while adding to the waitlist."}, status=500)
+            print("Error:", e)
+            return JsonResponse({"message": "An error occurred while adding to the waitlist.", "status": "error"})
+
+    return JsonResponse({"message": "Invalid request method", "status": "error"})

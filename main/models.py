@@ -1,13 +1,15 @@
 from django.db import models
 
-# Create your models here.
-
 class Waitlist(models.Model):
-    fullname = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
+    fullname = models.CharField(max_length=255)
+    email = models.EmailField(unique=True, db_index=True)  # ✅ Make sure this is unique
+    location = models.CharField(max_length=255, default="Unknown")  # ✅ Make sure this exists
     date_of_birth = models.DateField()
-    gender = models.CharField(max_length=10)
+    gender = models.CharField(max_length=20, null=True, blank=True)
+    preference = models.CharField(max_length=20, null=True, blank=True)
+    social_handle = models.CharField(max_length=100, null=True, blank=True)
+    mbti = models.CharField(max_length=10, null=True, blank=True)
+    partner_preferences = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.fullname + " | " + self.email + " | " + str(self.date_joined) + " | " + str(self.date_of_birth)
+        return f"{self.fullname} - {self.email}"

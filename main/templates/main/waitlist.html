@@ -13,61 +13,63 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     
-
     <style>
         * {
             font-family: 'IBM Plex Mono', monospace;
             color: white;
+            box-sizing: border-box;
         }
 
+        /* Enable vertical scrolling */
         html, body {
-                height: 100%;
-                margin: 0;
-            }
+            height: 100%;
+            margin: 0;
+            overflow-y: auto; /* Fixes scrolling issue */
+            overflow-x: hidden; /* Removes horizontal scrollbar */
+        }
 
-            body{
-                background: linear-gradient(black, #520987);
-                position: relative;
-                overflow: hidden;
-            }
+        body {
+            background: linear-gradient(black, #520987);
+            position: relative;
+        }
 
-            body::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 200%;
-                z-index: -1;
-                pointer-events: none;
-                opacity: 0.1;
-                background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5 L5 0 L10 5' stroke='white' stroke-width='1' fill='none'/%3E%3C/svg%3E");
-                background-size: 20px 20px;
-                background-repeat: repeat;
-                animation: scrollChevrons 10s linear infinite;
-                -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 95%);
-                mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 95%);
-            }
-            @keyframes scrollChevrons {
-                0% {
-                    background-position-y: 0;
-                }
-                100% {
-                    background-position-y: -200px;
-                }
-            }
+        /* Background Animation */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.1;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5 L5 0 L10 5' stroke='white' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+            background-size: 20px 20px;
+            background-repeat: repeat;
+            animation: scrollChevrons 10s linear infinite;
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 95%);
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 95%);
+        }
 
-        /* Center Content */
+        @keyframes scrollChevrons {
+            0% { background-position-y: 0; }
+            100% { background-position-y: -200px; }
+        }
+
+        /* Scrollable Form Container */
         .container {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
             text-align: center;
             padding: 20px;
+            padding-top: 120px; /* Move form down to avoid header overlap */
+            height: auto;
+            min-height: 100vh;
         }
 
+        /* Header Styling */
         h1 {
             font-weight: 600;
         }
@@ -78,70 +80,90 @@
             color: white;
         }
 
-        /* Form Styling */
+        /* Scrollable Form */
         form {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;     
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
         }
 
-        input, select, button {
+        /* Label Styling */
+        label {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            align-self: flex-start;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 5px;
+        }
+
+        /* Input, Select, and Textarea Styling */
+        input, select, textarea {
             font-size: 16px;
             padding: 12px;
             border-radius: 10px;
             border: none;
             width: 100%;
             max-width: 400px;
-        }
-
-        input, select {
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            text-align: left;
             outline: none;
+            text-align: left;
+            margin-bottom: 10px;
         }
 
-        /* 🎯 ADD THIS BLOCK FOR SELECT DROPDOWN STYLING */
+        /* Dropdown (Select) Styling */
+        /* Fix dropdown text color when opened */
         select {
             background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
-            padding: 12px;
-            border-radius: 10px;
-            width: 110%;
-            max-width: 400px;
-            appearance: none; /* Removes default system dropdown styles */
-            cursor: pointer;
+            color: white; /* Keeps white text when closed */
+            appearance: none; 
         }
 
-        /* When select box is clicked */
+        /* Ensure dropdown options are readable */
+        select option {
+            background: white; /* Change dropdown background to white */
+            color: black; /* Change text to black */
+        }
+
+        /* Ensure dropdown focus is visible */
         select:focus {
             background: rgba(255, 255, 255, 0.2);
-            color: black; /* Make text visible */
-        }
-
-        /* Dropdown Options */
-        select option {
-            background: black; /* Dark background for dropdown */
-            color: white; /* White text for contrast */
-        }
-
-        /* Hover Effect for Options */
-        select option:hover {
-            background: rgba(255, 255, 255, 0.3);
             color: black;
         }
+
+        /* Textarea Styling */
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        /* Button Styling */
         button {
             background-color: #C676FF;
             color: white;
             cursor: pointer;
             transition: 0.3s;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: none;
+            width: 100%;
+            max-width: 400px;
         }
 
         button:hover {
             background-color: #a04ed6;
         }
 
+        /* Links Styling */
         a {
             color: #C676FF;
             text-decoration: none;
@@ -155,11 +177,13 @@
             color: white;
         }
 
+        /* Status Message */
         #statusMessage {
             font-size: 14px;
             margin-top: 10px;
             opacity: 0.8;
         }
+
     </style>
 </head>
 
@@ -172,37 +196,73 @@
 
         <form id="registerForm" action="{% url 'register' %}" method="POST">
             {% csrf_token %}
+            
+            <label for="name">Full Name:</label>
             <input type="text" id="name" name="fullname" placeholder="Full Name" required>
+
+            <label for="email">Email Address:</label>
             <input type="email" id="email" name="email" placeholder="Email Address" required>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" placeholder="City, Country" required>
+
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="date_of_birth" required>
+
+
+            <label for="gender">Gender:</label>
             <select id="gender" name="gender" required>
                 <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
             </select>
-            <input type="date" id="dob" name="date_of_birth" required>
-            <button type="submit">Register</button>
+
+            <label for="preference">Interested in meeting:</label>
+            <select id="preference" name="preference" required>
+                <option value="">Interested in meeting</option>
+                <option value="male">Men</option>
+                <option value="female">Women</option>
+                <option value="any">Anyone</option>
+            </select>
+
+            <label for="social_handle">Social Handle:</label>
+            <input type="text" id="social_handle" name="social_handle" placeholder="@username" required>
+
+            <label for="mbti">Describe your personality (MBTI Type):</label>
+            <input type="text" id="mbti" name="mbti" placeholder="e.g., INFJ, ENTP" required>
+
+            <label for="partner_preferences">What kind of partner are you looking for?</label>
+            <textarea id="partner_preferences" name="partner_preferences" placeholder="Write your preferences..." rows="3" required></textarea>
+
+            <button type="submit">Join Waitlist</button>
         </form>
         
         <p id="statusMessage"></p>
 
         <a href="{% url 'landing_page' %}">← Back to Home</a>
     </div>
-
     <script>
-        console.log("JavaScript Loaded ✅");  // Check if JavaScript is running
+        console.log("JavaScript Loaded ✅");  // Debugging: Ensure script runs
     
         document.getElementById("registerForm").addEventListener("submit", function(event) {
             event.preventDefault();
-            console.log("Form submitted 🚀");  // Check if event listener is triggered
+            console.log("Form submitted 🚀");  // Debugging: Check if event is triggered
     
-            const name = document.getElementById("name").value;
+            // ✅ Collect all form values
+            const fullname = document.getElementById("name").value;
             const email = document.getElementById("email").value;
+            const location = document.getElementById("location").value;
+            const date_of_birth = document.getElementById("dob").value;
             const gender = document.getElementById("gender").value;
-            const dob = document.getElementById("dob").value;
-            console.log("Collected Data:", name, email, gender, dob);  // Debug form values
+            const preference = document.getElementById("preference").value;
+            const social_handle = document.getElementById("social_handle").value;
+            const mbti = document.getElementById("mbti").value;
+            const partner_preferences = document.getElementById("partner_preferences").value;
     
-            const formData = new FormData(this);
+            console.log("Collected Data:", fullname, email, location, date_of_birth, gender, preference, social_handle, mbti, partner_preferences);
+    
+            const formData = new FormData(this);  // ✅ Automatically collects all fields
     
             fetch("{% url 'register' %}", {
                 method: "POST",
@@ -213,12 +273,22 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log("Server Response:", data);  // Debugging response
-                document.getElementById("statusMessage").textContent = data.message;
+                console.log("Server Response:", data);  // Debugging: Log server response
+                const statusMessage = document.getElementById("statusMessage");
+    
+                if (data.message.includes("successfully")) {
+                    statusMessage.textContent = data.message;
+                    statusMessage.style.color = "#DDA0DD"; // ✅ Success message in purple
+                    document.getElementById("registerForm").reset(); // ✅ Clear form on success
+                } else {
+                    statusMessage.textContent = data.message;
+                    statusMessage.style.color = "red"; // ✅ Show error messages in red
+                }
             })
             .catch(error => {
                 console.error("Error:", error);
-                document.getElementById("statusMessage").textContent = "Failed to connect to server.";
+                document.getElementById("statusMessage").textContent = "Failed to connect to the server.";
+                document.getElementById("statusMessage").style.color = "red"; // ✅ Show error message in red
             });
         });
     </script>

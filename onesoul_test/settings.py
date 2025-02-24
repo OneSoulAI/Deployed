@@ -13,7 +13,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
-ALLOWED_HOSTS = ["onesoul.herokuapp.com", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [
+    "www.1soul.ai",
+    "fathomless-escarpment-92845.herokuapp.com",
+    "1soul.ai",
+    'fathomless-escarpment-92845-fc4ba9ea91ec.herokuapp.com',
+    '127.0.0.1',  # Allows local development
+    'localhost',   # Allows local testing
+]
+
 
 
 
@@ -131,3 +139,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+SECURE_SSL_REDIRECT = True
